@@ -19,7 +19,7 @@ public class EmailService {
     private final  UserRepository userRepository;
     public void sendVerificationEmail(User user)
     {
-        String verificationLink = "http://localhost:8080/api/v1/auth/verify?token=" + user.getToken();
+        String verificationLink = "http://localhost:8083/api/v1/auth/verify?token=" + user.getToken();
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(user.getEmailId());
         message.setSubject("Verify Your Email");

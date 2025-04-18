@@ -1,5 +1,6 @@
 package com.example.AuthenticationService.controller;
 
+import com.example.AuthenticationService.config.JwtService;
 import com.example.AuthenticationService.dto.AuthenticationRequest;
 import com.example.AuthenticationService.dto.AuthenticationResponse;
 import com.example.AuthenticationService.dto.RegisterRequest;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController {
     private final UserService userService;
     private final EmailService emailService;
+    private final JwtService jwtService;
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterRequest registerRequest)
     {
@@ -33,5 +35,11 @@ public class AuthenticationController {
     public  ResponseEntity<String> verifyAccount(@RequestParam("token") String token)
     {
        return ResponseEntity.ok(emailService.verifyEmail(token));
+    }
+    @GetMapping("/getUserId")
+    public ResponseEntity<String> getUserId(@RequestHeader("Authorization") String token)
+    {
+        String parseToken= token.substring(7);
+        return ResponseEntity.ok(jwtService.extractUserId(parseToken));
     }
 }
