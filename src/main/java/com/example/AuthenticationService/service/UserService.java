@@ -26,20 +26,24 @@ public class UserService {
     private final AuthenticationManager authenticationManager;
     public String register(RegisterRequest registerRequest) {
         try {
-            String token= UUID.randomUUID().toString();
-            var user= User.builder()
-                    .userName(registerRequest.getUserName())
-                    .emailId(registerRequest.getEmailId())
-                    .role(registerRequest.getRole())
-                    .isVerified(false)
-                    .password(passwordEncoder.encode(registerRequest.getPassword()))
-                    .role(registerRequest.getRole())
-                    .token(token)
-                    .build();
-            emailService.sendVerificationEmail(user);
-            userRepository.save(user);
+            String email=registerRequest.getEmailId();
+            if(!userRepository.existsByEmail(email)) {
+                String token = UUID.randomUUID().toString();
+                var user = User.builder()
+                        .userName(registerRequest.getUserName())
+                        .emailId(registerRequest.getEmailId())
+                        .role(registerRequest.getRole())
+                        .isVerified(false)
+                        .password(passwordEncoder.encode(registerRequest.getPassword()))
+                        .role(registerRequest.getRole())
+                        .token(token)
+                        .build();
+                emailService.sendVerificationEmail(user);
+                userRepository.save(user);
 
-            return "User successfully created";
+                return "User successfully created";
+            }
+            else throw new RuntimeException("Email already exist");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
