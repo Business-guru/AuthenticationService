@@ -8,13 +8,17 @@ import com.example.AuthenticationService.entity.User;
 import com.example.AuthenticationService.enums.Role;
 import com.example.AuthenticationService.exceptionHandler.EmailNotVerifiedException;
 import com.example.AuthenticationService.repository.UserRepository;
+import kafka.Kafka;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +28,7 @@ public class UserService {
     private final JwtService jwtService;
     private final EmailService emailService;
     private final AuthenticationManager authenticationManager;
+    private final KafkaTemplate<String,Object> template;
     public String register(RegisterRequest registerRequest) {
         try {
             String email=registerRequest.getEmailId();
@@ -50,19 +55,21 @@ public class UserService {
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmailId(),
-                        request.getPassword()
-                )
-        );
 
-        var user=userRepository.findByEmailId(request.getEmailId()).orElseThrow(()->new NullPointerException());
-         if(!userRepository.findIsVerifiedByEmail(request.getEmailId()))
-         {
-             throw new EmailNotVerifiedException("Email is not verified");
-         }
-        var jwtToken= jwtService.generateToken(user);
-        return AuthenticationResponse.builder().token(jwtToken).build();
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getEmailId(),
+                            request.getPassword()
+                    )
+            );
+
+            if (userRepository.findIsVerifiedByEmail(request.getEmailId())) {
+                User user = userRepository.findByEmailId(request.getEmailId()).orElseThrow(() -> new NullPointerException());
+                var jwtToken = jwtService.generateToken(user);
+                return AuthenticationResponse.builder().token(jwtToken).build();
+            } else {
+                throw new EmailNotVerifiedException("Email is not verified");
+            }
     }
+
 }

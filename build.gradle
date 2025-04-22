@@ -54,8 +54,14 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-mail
 	implementation 'org.springframework.boot:spring-boot-starter-mail:3.4.4'
+// https://mvnrepository.com/artifact/org.apache.kafka/kafka-clients
+// https://mvnrepository.com/artifact/org.apache.kafka/kafka
+	implementation 'org.apache.kafka:kafka_2.13:3.5.0'
+	// Spring Kafka
+	implementation 'org.springframework.kafka:spring-kafka'
 
-
+	// (Optional) Apache Kafka client — included with spring-kafka, but can be explicit
+	implementation 'org.apache.kafka:kafka-clients'
 
 }
 
