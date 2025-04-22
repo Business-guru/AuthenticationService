@@ -30,7 +30,7 @@ public class UserService {
             if(!userRepository.existsByEmail(email)) {
                 String token = UUID.randomUUID().toString();
                 var user = User.builder()
-                        .userName(registerRequest.getUserName())
+                        .userIdentity(registerRequest.getUserIdentity())
                         .emailId(registerRequest.getEmailId())
                         .role(registerRequest.getRole())
                         .isVerified(false)

@@ -36,7 +36,7 @@ public class AuthenticationController {
     {
        return ResponseEntity.ok(emailService.verifyEmail(token));
     }
-    @GetMapping("/getUserId")
+    @GetMapping("/getUsername")
     public ResponseEntity<String> getUserId(@RequestHeader("Authorization") String token)
     {
         String parseToken= token.substring(7);

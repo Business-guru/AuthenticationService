@@ -47,10 +47,10 @@ public class JwtService {
     public String generateToken(User user)
     {
         HashMap<String,Object> extraClaimsMap=new HashMap<>();
-        extraClaimsMap.put("userId",user.getId());
+        extraClaimsMap.put("username",user.getUserIdentity());
         return generateToken(extraClaimsMap,user);
     }
-    public String generateToken(Map<String,Object> extraClaims, UserDetails userDetails)
+    public String generateToken(Map<String,Object> extraClaims, User userDetails)
     {
         return Jwts.builder()
                 .setClaims(extraClaims)
@@ -87,7 +87,7 @@ public class JwtService {
                     .parseClaimsJws(token)
                     .getBody();
 
-            return claims.get("userId", String.class); // Extract userId
+            return claims.get("username", String.class); // Extract userId
         } catch (Exception e) {
             throw new RuntimeException("Could not extract userId from JWT");
         }
