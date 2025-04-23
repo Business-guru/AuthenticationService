@@ -1,10 +1,7 @@
 package com.example.AuthenticationService.controller;
 
 import com.example.AuthenticationService.config.JwtService;
-import com.example.AuthenticationService.dto.AuthenticationRequest;
-import com.example.AuthenticationService.dto.AuthenticationResponse;
-import com.example.AuthenticationService.dto.RegisterRequest;
-import com.example.AuthenticationService.dto.UserDto;
+import com.example.AuthenticationService.dto.*;
 import com.example.AuthenticationService.service.EmailService;
 import com.example.AuthenticationService.service.UserService;
 import lombok.Getter;
@@ -37,7 +34,7 @@ public class AuthenticationController {
        return ResponseEntity.ok(emailService.verifyEmail(token));
     }
     @GetMapping("/getUsername")
-    public ResponseEntity<String> getUserId(@RequestHeader("Authorization") String token)
+    public ResponseEntity<UserDetailsDto> getUserId(@RequestHeader("Authorization") String token)
     {
         String parseToken= token.substring(7);
         return ResponseEntity.ok(jwtService.extractUserId(parseToken));

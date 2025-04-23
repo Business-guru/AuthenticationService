@@ -1,5 +1,6 @@
 package com.example.AuthenticationService.config;
 
+import com.example.AuthenticationService.dto.UserDetailsDto;
 import com.example.AuthenticationService.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -78,7 +79,7 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String extractUserId(String token)
+    public UserDetailsDto extractUserId(String token)
     {
         try {
             Claims claims = Jwts
@@ -87,8 +88,7 @@ public class JwtService {
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
-
-            return claims.get("username", String.class); // Extract userId
+            return UserDetailsDto.builder().userType(claims.get("userType", String.class)).username(claims.get("username", String.class)).build(); // Extract userId
         } catch (Exception e) {
             throw new RuntimeException("Could not extract userId from JWT");
         }
