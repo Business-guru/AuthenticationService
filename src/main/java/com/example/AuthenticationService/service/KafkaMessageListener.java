@@ -7,12 +7,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.logging.Logger;
 
-@Service
-public class KafkaMessageListener {
-
-
-    @KafkaListener(topics = "profile", groupId = "jt-group")
-    public void consumeEvents(UserSyncDto userSyncDto) {
-        System.out.println(userSyncDto.toString());
-    }
-}
+//@Service
+//public class KafkaMessageListener {
+//
+//
+//    @KafkaListener(topics = "profile", groupId = "jt-group")
+//    public void consumeEvents(UserSyncDto userSyncDto) {
+//        System.out.println(userSyncDto.toString());
+//    }
+//}

@@ -2,6 +2,8 @@ package com.example.AuthenticationService.service;
 
 import com.example.AuthenticationService.dto.UserSyncDto;
 import com.example.AuthenticationService.entity.User;
+import com.example.AuthenticationService.enums.Role;
+import com.example.AuthenticationService.enums.UserType;
 import com.example.AuthenticationService.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -36,9 +38,9 @@ public class EmailService {
         if (userdetails.isPresent()) {
             User user = userdetails.get();
             user.setVerified(true);
-            UserSyncDto userSyncDto=UserSyncDto.builder().email(user.getEmailId()).userId(user.getUserIdentity()).userType(user.getRole()).build();
+            UserSyncDto userSyncDto=UserSyncDto.builder().email(user.getEmailId()).userId(user.getUserIdentity()).userType(user.getRole()==Role.MENTEE ? UserType.USER : UserType.MENTOR).build();
             try {
-                CompletableFuture<SendResult<String, Object>> future = kafkaTemplate.send("profile",userSyncDto);
+                CompletableFuture<SendResult<String, Object>> future = kafkaTemplate.send("profile5",userSyncDto);
                 future.whenComplete((result, ex) -> {
                     if (ex == null) {
                         System.out.println("Sent message=[" + user.toString() +

@@ -20,7 +20,7 @@ public class KafkaProducerConfig {
 
     @Bean
     public NewTopic createTopic(){
-        return new NewTopic("profile", 3, (short) 1);
+        return new NewTopic("profile5", 3, (short) 1);
     }
 
     @Bean
@@ -37,7 +37,12 @@ public class KafkaProducerConfig {
 
     @Bean
     public ProducerFactory<String,Object> producerFactory(){
-        return new DefaultKafkaProducerFactory<>(producerConfig());
+        Map<String, Object> props = producerConfig();
+
+        // Add this line to include type information in the message
+        props.put(JsonSerializer.TYPE_MAPPINGS, "userSyncDto:com.example.AuthenticationService.dto.UserSyncDto");
+
+        return new DefaultKafkaProducerFactory<>(props);
     }
 
     @Bean
