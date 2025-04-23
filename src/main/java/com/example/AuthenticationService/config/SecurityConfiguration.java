@@ -28,10 +28,7 @@ public class SecurityConfiguration {
         http.csrf(AbstractHttpConfigurer::disable) // Disable CSRF for simplicity (not recommended for production)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/**").
-                        permitAll().requestMatchers("/api/v1/mentorship/mentor/getAllMentors").permitAll().
-                        requestMatchers("/api/v1/mentorship/mentor/searchMentors").permitAll().
-                        requestMatchers("/api/v1/mentorship/blogs/getAllBlogs").permitAll().
-                        requestMatchers("service/api/v1/novels/covers").permitAll()
+                        permitAll()
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
